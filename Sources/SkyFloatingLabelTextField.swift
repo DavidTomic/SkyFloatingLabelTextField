@@ -72,6 +72,13 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
             updatePlaceholder()
         }
     }
+    
+    /// A Spacing value that determines letter spacing of the placeholder label
+    @objc dynamic open var placeholderLetterSpacing: CGFloat = 0.0 {
+        didSet {
+            updatePlaceholder()
+        }
+    }
 
     fileprivate func updatePlaceholder() {
         guard let placeholder = placeholder, let font = placeholderFont ?? font else {
@@ -82,13 +89,14 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
             attributedPlaceholder = NSAttributedString(
                 string: placeholder,
                 attributes: [
-                    NSAttributedStringKey.foregroundColor: color, NSAttributedStringKey.font: font
+                    NSAttributedStringKey.foregroundColor: color, NSAttributedStringKey.font: font,
+                    NSAttributedStringKey.kern: placeholderLetterSpacing
                 ]
             )
         #else
             attributedPlaceholder = NSAttributedString(
                 string: placeholder,
-                attributes: [NSForegroundColorAttributeName: color, NSFontAttributeName: font]
+                attributes: [NSForegroundColorAttributeName: color, NSFontAttributeName: font, NSKernAttributeName: placeholderLetterSpacing]
             )
         #endif
     }
