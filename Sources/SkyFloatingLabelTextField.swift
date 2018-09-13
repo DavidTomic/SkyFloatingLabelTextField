@@ -73,7 +73,7 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
         }
     }
     
-    /// A Spacing value that determines letter spacing of the placeholder label
+    /// A CGFloat value that determines letter spacing of the placeholder label
     @objc dynamic open var placeholderLetterSpacing: CGFloat = 0.0 {
         didSet {
             updatePlaceholder()
@@ -103,6 +103,13 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
 
     /// A UIFont value that determines the text font of the title label
     @objc dynamic open var titleFont: UIFont = .systemFont(ofSize: 13) {
+        didSet {
+            updateTitleLabel()
+        }
+    }
+    
+    /// A CGFloat value that determines the letter spacing of the title label
+    @IBInspectable dynamic open var titleLetterSpacing: CGFloat = 0.0 {
         didSet {
             updateTitleLabel()
         }
@@ -499,8 +506,19 @@ open class SkyFloatingLabelTextField: UITextField { // swiftlint:disable:this ty
                 titleText = titleOrPlaceholder()
             }
         }
-        titleLabel.text = titleText
         titleLabel.font = titleFont
+        
+        if let titleText = titleText {
+            #if swift(>=4.0)
+                titleLabel.attributedText = NSAttributedString(string: titleText,
+                    attributes: [NSAttributedStringKey.kern: titleLetterSpacing])
+            #else
+                titleLabel.attributedText = NSAttributedString(string: titleText,
+                    attributes: [NSKernAttributeName: titleLetterSpacing])
+            #endif
+        } else {
+            titleLabel.text = nil
+        }
 
         updateTitleVisibility(animated)
     }
